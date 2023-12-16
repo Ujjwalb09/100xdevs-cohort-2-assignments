@@ -4,6 +4,14 @@
 */
 
 function isPalindrome(str) {
+  let string = str.toLowerCase();
+
+  //removing spaces and special character from the string
+  string = string.replace(/[^\w\s]|_/g, "").replace(/\s+/g, "");
+
+  let reverseString = string.split("").reverse().join("");
+
+  if (string !== reverseString) return false;
   return true;
 }
 
