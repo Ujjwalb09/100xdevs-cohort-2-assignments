@@ -41,9 +41,26 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
   const app = express();
-  
   app.use(bodyParser.json());
+
+let todoList = [];
+
+  app.post("/todos", (request, response)=>{
+        let todoBody = request.body;
+        let uniqueID = Math.floor(Math.random() * 10) + 1;
+        todoBody["id"] = uniqueID;
+        todoList.push(todoBody);
+
+        response.status(201).json({id:uniqueID});
+
+  })
+
+  app.get("/todos", (request, response)=>{
+     
+    response.json(todoList);
+  })
+
+  app.listen(3000);
   
   module.exports = app;
