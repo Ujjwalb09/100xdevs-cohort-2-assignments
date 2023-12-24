@@ -15,7 +15,7 @@
     Description: Returns a specific todo item identified by its ID.
     Response: 200 OK with the todo item in JSON format if found, or 404 Not Found if not found.
     Example: GET http://localhost:3000/todos/123
-    
+     
   3. POST /todos - Create a new todo item
     Description: Creates a new todo item.
     Request Body: JSON object representing the todo item.
@@ -46,14 +46,37 @@
 
 let todoList = [];
 
+function checkUnqiueId(id){
+    let newId = 0;
+    let idArr = [];
+    let oldId = id;
+    let check  = false;
+
+    for(let i = 0; i < todoList.length; i++){
+      idArr.push(todoList[i].id);
+    }
+
+    while(idArr.includes(id)){
+      newId = Math.floor(Math.random() * 10) + 1;
+      id = newId;
+      check = true;
+    }
+     
+    return check === false ? oldId : newId;
+
+}
+
   app.post("/todos", (request, response)=>{
         let todoBody = request.body;
         let uniqueID = Math.floor(Math.random() * 10) + 1;
-        todoBody["id"] = uniqueID;
+
+        let id = checkUnqiueId(uniqueID);
+
+        todoBody["id"] = id;
         todoList.push(todoBody);
 
         response.status(201).json({id:uniqueID});
-
+        
   })
 
   app.get("/todos", (request, response)=>{
@@ -61,6 +84,47 @@ let todoList = [];
     response.json(todoList);
   })
 
-  app.listen(3000);
+  app.get("/todos/:id", (request, response)=>{
+    const getId = parseInt(request.params.id);
+
+    for(let i = 0; i < todoList.length; i++){
+      if(todoList[i].id === getId){
+        return response.json(todoList[i]);
+      }
+    }
+
+    response.sendStatus(404);
+  })
+
+  app.delete("/todos/:id", (request, response)=>{
+    const getId = parseInt(request.params.id);
+
+    for(let i = 0; i < todoList.length; i++){
+      if(todoList[i].id === getId){
+        todoList.splice(i, 1);
+        return response.sendStatus(200);
+      }
+    }
+
+    response.sendStatus(404);
+  })
+
+  app.put("/todos/:id", (request, response)=>{
+       const getId = parseInt(request.params.id);
+       const bodyOBJ = request.body;
+
+       for(let i = 0; i < todoList.length; i++){
+        if(todoList[i].id === getId){
+          todoList[i].title = bodyOBJ.title;
+          todoList[i].completed = bodyOBJ.completed;
+
+          return response.sendStatus(200);
+        }
+       }
+
+       response.sendStatus(404);
+  })
+
+  app.listen(3001);
   
   module.exports = app;
