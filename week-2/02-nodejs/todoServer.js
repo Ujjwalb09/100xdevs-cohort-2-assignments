@@ -40,11 +40,19 @@
   Testing the server - run `npm run test-todoServer` command in terminal
  */
   const express = require('express');
+  const fs = require('fs');
   const bodyParser = require('body-parser');
   const app = express();
   app.use(bodyParser.json());
 
 let todoList = [];
+
+fs.readFile("todos.json", "utf-8", (err, data) => {
+  if (!err) {
+    todoList = JSON.parse(data);
+  }
+});
+
 
 function checkUnqiueId(id){
     let newId = 0;
@@ -74,8 +82,10 @@ function checkUnqiueId(id){
 
         todoBody["id"] = id;
         todoList.push(todoBody);
-
-        response.status(201).json({id:uniqueID});
+        
+        fs.writeFile("todos.json", JSON.stringify(todoList), (err) => {
+          response.status(201).json({ id: id });
+        });
         
   })
 
@@ -87,42 +97,59 @@ function checkUnqiueId(id){
   app.get("/todos/:id", (request, response)=>{
     const getId = parseInt(request.params.id);
 
-    for(let i = 0; i < todoList.length; i++){
-      if(todoList[i].id === getId){
-        return response.json(todoList[i]);
+      for(let i = 0; i < todoList.length; i++){
+        if(todoList[i].id === getId){
+          return response.json(todoList[i]);
+        }
       }
-    }
+      response.sendStatus(404);
 
-    response.sendStatus(404);
   })
 
   app.delete("/todos/:id", (request, response)=>{
     const getId = parseInt(request.params.id);
+    let check = false;
 
-    for(let i = 0; i < todoList.length; i++){
-      if(todoList[i].id === getId){
-        todoList.splice(i, 1);
-        return response.sendStatus(200);
-      }
+    if(todoList.length === 0){
+      response.sendStatus(404);
     }
 
-    response.sendStatus(404);
+      for(let i = 0; i < todoList.length; i++){
+        if(todoList[i].id === getId){
+          check = true;
+          todoList.splice(i, 1);
+          fs.writeFile("todos.json", JSON.stringify(todoList), (err)=>{
+            return response.sendStatus(200);
+          })
+        }
+      }
+
+      if(!check) response.sendStatus(404);
   })
 
   app.put("/todos/:id", (request, response)=>{
        const getId = parseInt(request.params.id);
        const bodyOBJ = request.body;
+       let check = false;
 
-       for(let i = 0; i < todoList.length; i++){
-        if(todoList[i].id === getId){
-          todoList[i].title = bodyOBJ.title;
-          todoList[i].completed = bodyOBJ.completed;
+       if(todoList.length === 0){
+        response.sendStatus(404);
+      }
+  
 
-          return response.sendStatus(200);
+        for(let i = 0; i < todoList.length; i++){
+         if(todoList[i].id === getId){
+          check = true;
+           todoList[i].title = bodyOBJ.title;
+           todoList[i].completed = bodyOBJ.completed;
+
+           fs.writeFile("todos.json", JSON.stringify(todoList), (err)=>{
+             return response.sendStatus(200);
+           })
+         }
         }
-       }
 
-       response.sendStatus(404);
+        if(!check) response.sendStatus(404);
   })
 
   app.listen(3001);
