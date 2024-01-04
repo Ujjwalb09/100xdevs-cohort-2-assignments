@@ -65,7 +65,7 @@ function checkUnqiueId(id){
     }
 
     while(idArr.includes(id)){
-      newId = Math.floor(Math.random() * 10) + 1;
+      newId = Math.floor(Math.random() * 20) + 1;
       id = newId;
       check = true;
     }
@@ -136,7 +136,6 @@ function checkUnqiueId(id){
         response.sendStatus(404);
       }
   
-
         for(let i = 0; i < todoList.length; i++){
          if(todoList[i].id === getId){
           check = true;
