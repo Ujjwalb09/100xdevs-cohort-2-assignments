@@ -31,6 +31,10 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+
+    purchasedCourses: {
+        type: Array
     }
 });
 
