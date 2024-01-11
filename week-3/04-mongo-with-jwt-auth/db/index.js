@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+
+    purchasedCourses: {
+        type: Array
     }
 });
 
@@ -62,7 +66,7 @@ const CourseSchema = new mongoose.Schema({
     },
 
     published:{
-        type: String,
+        type: Boolean,
         required: true
     }
 
