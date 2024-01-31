@@ -1,9 +1,7 @@
 const { Router, json } = require("express");
 const adminMiddleware = require("../middleware/admin");
-const {Admin, Course} = require('../db/index');
+const {Admin, Course, User} = require('../db/index');
 const {jwt, secretKey} = require('../index');
-// const jwt = require("jsonwebtoken");
-// const secretKey = "jwtKey";
 const router = Router();
 
 
@@ -21,26 +19,35 @@ router.post('/signup', (req, res) => {
     admin.save().then(()=>res.json({message: "Admin created Successfully"}));
 });
 
-router.post('/signin', (req, res) => {
+router.post('/signin', async (req, res) => {
     // Implement admin signin logic
    const username = req.body.username;
    const password = req.body.password;
 
-   const token = jwt.sign({username, password}, secretKey);
-   const bearerToken = `Bearer ${token}`;
-
-   res.json({
-    message: "You have successfully signed in",
-    authorizationToken: bearerToken
+   const admin = await Admin.findOne({
+    username,
+    password
    })
+
+   if(admin){
+       const token = jwt.sign({username}, secretKey);
+       const bearerToken = `Bearer ${token}`;
+    
+       res.json({
+        message: "You have successfully signed in",
+        authorizationToken: bearerToken
+       })
+   } else {
+    res.status(411).json({message: "Incorrect email or pass"});
+   }
+
 });
 
-router.post('/courses', adminMiddleware, (req, res) => {
+router.post('/courses', adminMiddleware, async (req, res) => {
     // Implement course creation logic
     let courseBody = req.body;
 
-    const course = new Course({
-        id: courseBody.id,
+    const course = await Course.create({
         title: courseBody.title,
         description: courseBody.description,
         price: courseBody.price,
@@ -48,7 +55,7 @@ router.post('/courses', adminMiddleware, (req, res) => {
         published: courseBody.published
     })
 
-    course.save().then(()=>res.json({message: `Course created successfully, courseId: ${courseBody.id}`}))
+    res.json({message: `Course created successfully, courseId: ${course._id}`});
 });
 
 router.get('/courses', adminMiddleware, async (req, res) => {

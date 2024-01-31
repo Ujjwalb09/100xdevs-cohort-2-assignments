@@ -9,10 +9,10 @@ function userMiddleware(req, res, next) {
 
     try{
           const decodedObj = jwt.verify(token, secretKey);
-          req.userObject = decodedObj;
+          req.username = decodedObj.username;
           next();
     } catch(err){
-        res.send("Authorization token invalid!")
+        res.status(403).send("Autorization token invalid!");
     }
 }
 

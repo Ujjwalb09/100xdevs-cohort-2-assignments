@@ -12,7 +12,7 @@ function adminMiddleware(req, res, next) {
         jwt.verify(token, secretKey);
         next();
     } catch(err){
-        res.send("Autorization token invalid!");
+        res.status(403).send("Autorization token invalid!");
     }
 }
 

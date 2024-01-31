@@ -18,18 +18,27 @@ router.post('/signup', (req, res) => {
     user.save().then(()=>res.json({message: "User created successfully"}));
 });
 
-router.post('/signin', (req, res) => {
+router.post('/signin', async (req, res) => {
     // Implement admin signin logic
     const username = req.body.username;
     const password = req.body.password;
-
-    const token = jwt.sign({username, password}, secretKey);
-    const bearerToken = `Bearer ${token}`;
-
-    res.json({
-        message: "Sign in successful!",
-        token: bearerToken
-    });
+ 
+    const user = await User.findOne({
+     username,
+     password
+    })
+ 
+    if(user){
+        const token = jwt.sign({username}, secretKey);
+        const bearerToken = `Bearer ${token}`;
+     
+        res.json({
+         message: "You have successfully signed in",
+         authorizationToken: bearerToken
+        })
+    } else {
+     res.status(411).json({message: "Incorrect email or pass"});
+    }
 });
 
 router.get('/courses', async (req, res) => {
@@ -43,26 +52,56 @@ router.get('/courses', async (req, res) => {
 
 router.post('/courses/:courseId', userMiddleware, async (req, res) => {
     // Implement course purchase logic
-    const courseId = req.params.courseId;
-    const decodedUser = req.userObject;
+    /*const courseId = req.params.courseId;
+    const username = req.username;
 
     const course = await Course.findOne({id: courseId});
 
-    const user = await User.findOne({username: decodedUser.username});
+    const user = await User.findOne({username});
 
     user.purchasedCourses.push(course);
 
-    user.save().then(()=>res.json({message: "Course purchased successfully!"}));
+    user.save().then(()=>res.json({message: "Course purchased successfully!"}));*/
+
+    const courseId = req.params.courseId;
+    const username = req.username;
+
+    await User.updateOne({
+        username
+    }, {
+        "$push":{
+            purchasedCourses: courseId
+        }
+    })
+
+    res.json({
+        message: "Course purchased successfully"
+    })
 });
 
 router.get('/purchasedCourses', userMiddleware, async (req, res) => {
     // Implement fetching purchased courses logic
-    const decodedUser = req.userObject;
+    /*const username = req.username;
 
-    const user = await User.findOne({username: decodedUser.username});
+    const user = await User.findOne({username});
 
     res.json({
         purchasedCourses: user.purchasedCourses
+    });*/
+
+    const username = req.username;
+    const user = await User.findOne({username:username});
+
+    console.log(user);
+
+    const courses = await Course.find({
+        _id:{
+            "$in": user.purchasedCourses
+        }
+    })
+
+    res.json({
+        your_courses: courses
     });
 });
 
