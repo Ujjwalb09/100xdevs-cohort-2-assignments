@@ -41,12 +41,6 @@ const UserSchema = new mongoose.Schema({
 const CourseSchema = new mongoose.Schema({
     // Schema definition here
 
-    id: {
-        type: Number,
-        unique: true,
-        required: true
-    },
-
     title: {
         type: String,
         required: true,
