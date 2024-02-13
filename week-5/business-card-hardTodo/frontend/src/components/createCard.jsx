@@ -28,13 +28,13 @@ export function CreateCard(){
         <input type="text" placeholder="Your Name" onChange={(e)=>{setName(e.target.value)}} /> <br /><br />
         <textarea style={styles.textarea} placeholder="Short description about you" onChange={(e)=>{setdescription(e.target.value)}}></textarea>
         <div id="interests">
-            <h5 style={styles.headers}>Interests</h5>
+            <h4 style={styles.headers}>Interests</h4>
             <input type="text" placeholder="1" onChange={(e)=>interestChange(0, e.target.value)}/> <br /><br />
             <input type="text" placeholder="2" onChange={(e)=>interestChange(1, e.target.value)}/> <br /><br />
             <input type="text" placeholder="3" onChange={(e)=>interestChange(2, e.target.value)}/>
         </div>
         <div>
-            <h5 style={styles.headers}>Your Socials</h5>
+            <h4 style={styles.headers}>Your Socials</h4>
             <input type="text" placeholder="LinkedIn" onChange={(e)=>socialChange("LinkedIn", e.target.value)}/> <br /><br />
             <input type="text" placeholder="Twitter" onChange={(e)=>socialChange("Twitter", e.target.value)}/> <br /><br />
         </div>
