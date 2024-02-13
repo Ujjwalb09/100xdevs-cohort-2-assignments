@@ -1,16 +1,15 @@
 import { useState } from 'react'
+import { CreateCard } from './components/createCard'
+import { CardComponent } from './components/CardComponent'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [card, setCard] = useState({})
+
+
 
   return (
     <>
-      <input type="text" placeholder='Your Name'/> <br /> <br />
-      <input type="text" placeholder='Short description about you'/> <br /> <br />
-      <input type="text" placeholder='Your interests'/> <br /> <br />
-      <input type="text" placeholder='Your linkedIn'/> <br /> <br />
-      <input type="text" placeholder='Your Twitter'/> <br /> <br />
-      <button>Generate Card</button>
+      <CreateCard> </CreateCard>
     </>
   )
 }

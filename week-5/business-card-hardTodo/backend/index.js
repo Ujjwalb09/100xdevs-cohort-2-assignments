@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const port  = 3000;
 const card = require('./database');
+const cors = require("cors");
 
 app.use(express.json());
+app.use(cors());
 
 
 app.post("/card", async (req, res)=>{
