@@ -22,14 +22,12 @@ app.post("/card", async (req, res)=>{
 })
 
 
-app.get("/card", async (req, res)=>{
+app.post("/getCard", async (req, res)=>{
     const name = req.body.name;
 
     const cards = await card.find({
         name
     })
-
-    console.log(cards);
 
     res.json({
         card: cards[0]

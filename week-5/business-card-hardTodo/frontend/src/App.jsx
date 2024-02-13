@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CreateCard } from './components/createCard'
 import { CardComponent } from './components/CardComponent'
+import { FindCard } from './components/FindCard'
 
 function App() {
   const [card, setCard] = useState({})
@@ -10,6 +11,7 @@ function App() {
   return (
     <>
       <CreateCard> </CreateCard>
+      <FindCard></FindCard>
     </>
   )
 }
