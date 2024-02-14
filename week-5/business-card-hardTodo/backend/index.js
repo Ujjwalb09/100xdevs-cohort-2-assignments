@@ -25,18 +25,24 @@ app.post("/card", async (req, res)=>{
 app.get("/card", async (req, res)=>{
     const name = req.query.name;
 
-    const cards = await card.find({
-        name
-    })
+        const cards = await card.findOne({
+            name
+        })
+    
+        if(!cards) res.json({message: `No card with name ${name} exists`});
+        else res.json(cards)
 
-    res.json({
-        card: cards[0]
 })
+
+app.delete("/card", async (req, res)=>{
+     const name = req.query.name;
+
+     await card.deleteOne({name});
+
+     res.json({
+        message: "Card deleted Successfully!"
+     })
 })
-
-// app.delete("/card", async (req, res)=>{
-
-// })
 
 app.listen(port);
 

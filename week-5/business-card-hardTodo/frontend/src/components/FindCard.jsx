@@ -7,7 +7,8 @@ export function FindCard(){
     const [input, setInput] = useState("");
     const [showComponent, setShowComponent] = useState(false);
     const [card, setCard] = useState({});
-
+    const[message, setMessage] = useState("");
+    const[displayMessage, setDsiplayMessage] = useState(false);
 
 
      return <div style={{
@@ -26,12 +27,25 @@ export function FindCard(){
               })
 
               const cardObj = await responseObj.json();
-              setCard(cardObj.card);
-              setShowComponent(true);
+              setShowComponent(false);
+              setDsiplayMessage(false);
+
+              if(cardObj.message){
+                 setMessage(cardObj.message);
+                 setDsiplayMessage(true);
+              } else {
+                  setCard(cardObj);
+                  setShowComponent(true);
+              }
         }}>
             Find Card
         </button>
 
         {showComponent == true ? (<CardComponent name={card.name} description={card.description} interests={card.interests} socials={card.socials}></CardComponent>) : ""}
+
+        {displayMessage == true ? <div>
+            <h5>{message}</h5>
+        </div> : ""}
+
      </div>
 }
