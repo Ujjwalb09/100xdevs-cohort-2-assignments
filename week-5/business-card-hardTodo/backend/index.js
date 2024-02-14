@@ -22,8 +22,8 @@ app.post("/card", async (req, res)=>{
 })
 
 
-app.post("/getCard", async (req, res)=>{
-    const name = req.body.name;
+app.get("/card", async (req, res)=>{
+    const name = req.query.name;
 
     const cards = await card.find({
         name
@@ -34,7 +34,9 @@ app.post("/getCard", async (req, res)=>{
 })
 })
 
+// app.delete("/card", async (req, res)=>{
 
+// })
 
 app.listen(port);
 

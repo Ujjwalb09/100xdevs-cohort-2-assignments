@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { CardComponent} from './CardComponent'
 
-// let card = {};
 
 export function FindCard(){
 
@@ -20,11 +19,7 @@ export function FindCard(){
         }}>Find your Card</h4>
         <input type="text" placeholder="Enter your Full Name" onChange={(e)=>{setInput(e.target.value)}}/>
         <button onClick={async ()=>{
-              const responseObj = await fetch("http://localhost:3000/getCard", {
-                method: "POST",
-                body: JSON.stringify({
-                    name: input
-                 }),
+              const responseObj = await fetch(`http://localhost:3000/card?name=${input}`, {
                  headers:{
                      "content-Type": "application/json"
                  }
