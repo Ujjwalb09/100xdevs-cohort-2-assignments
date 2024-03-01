@@ -7,12 +7,16 @@ export function Assignment1() {
 
     // Your code starts here
     const handleIncrement = useCallback(()=>{
-            setCount(count+1);
-    }, [count])
+            setCount(function(currentCount){
+                return currentCount + 1;
+            }); 
+    }, [])
 
     const handleDecrement = useCallback(()=>{
-          setCount(count-1);
-    }, [count])
+        setCount(function(currentCount){
+            return currentCount - 1;
+        });
+    }, [])
     // Your code ends here
 
     return (
@@ -21,11 +25,12 @@ export function Assignment1() {
             <CounterButtons onIncrement={handleIncrement} onDecrement={handleDecrement} />
         </div>
     );
-};
+}
 
-const CounterButtons = ({ onIncrement, onDecrement }) => (
+// eslint-disable-next-line react/display-name
+const CounterButtons = memo(({ onIncrement, onDecrement }) => (
     <div>
         <button onClick={onIncrement}>Increment</button>
-        <button onClick={onDecrement}>Decrement</button>
+        <button onClick={onDecrement}>Decrement</button> 
     </div>
-);
+));
