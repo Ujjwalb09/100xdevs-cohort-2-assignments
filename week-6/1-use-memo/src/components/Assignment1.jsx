@@ -22,7 +22,7 @@ export function Assignment1() {
                 result *= i;
             }
             return result;
-
+ 
     }, [input])
     // Your solution ends here
 
